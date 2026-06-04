@@ -1,10 +1,15 @@
-import fs from "node:fs";
-import path from "node:path";
+import manifest from "./gallery-manifest.json";
 
 // ---------------------------------------------------------------------------
 // ORIGEM ÚNICA DAS IMAGENS DA GALERIA
 //
-// Hoje as fotos vêm do filesystem (pasta public/gallery, servida em /gallery).
+// As fotos ficam em public/gallery (servidas em /gallery). O INVENTÁRIO dos
+// arquivos é capturado em build time pelo script scripts/generate-gallery-
+// manifest.mjs (roda via predev/prebuild) e gravado em gallery-manifest.json.
+// Lemos esse manifesto aqui — sem tocar o filesystem em runtime, o que mantém
+// tudo funcionando em produção serverless (Vercel), onde public/ não está
+// disponível para a função.
+//
 // Toda a leitura está isolada em `readGalleryFiles()`. Para migrar para o
 // Firebase (ou qualquer outra origem) no futuro, basta reescrever essa única
 // função para devolver uma lista de `GalleryImage` — os componentes e as
@@ -17,9 +22,6 @@ export interface GalleryImage {
   /** Texto alternativo legível, derivado do nome do arquivo. */
   alt: string;
 }
-
-const GALLERY_DIR = path.join(process.cwd(), "public", "gallery");
-const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"]);
 
 /** Converte "max_gindele-great-spotted-8024806_1920.jpg" -> "Great spotted woodpecker". */
 function filenameToAlt(filename: string): string {
@@ -35,16 +37,12 @@ function filenameToAlt(filename: string): string {
 
 /**
  * ÚNICO ponto de acoplamento com a origem dos dados.
- * Devolve a lista em ordem estável (alfabética) — o embaralhamento e a
- * seleção determinística ficam nas funções públicas abaixo.
+ * Devolve a lista em ordem estável (alfabética, garantida pelo gerador do
+ * manifesto) — o embaralhamento e a seleção determinística ficam nas funções
+ * públicas abaixo.
  */
 function readGalleryFiles(): GalleryImage[] {
-  const files = fs
-    .readdirSync(GALLERY_DIR)
-    .filter((file) => IMAGE_EXTENSIONS.has(path.extname(file).toLowerCase()))
-    .sort((a, b) => a.localeCompare(b));
-
-  return files.map((file) => ({
+  return (manifest as string[]).map((file) => ({
     src: `/gallery/${file}`,
     alt: filenameToAlt(file),
   }));
