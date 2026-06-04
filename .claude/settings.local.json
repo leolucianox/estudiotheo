@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx next *)",
+      "Bash(curl *)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(foreach \\($procId in 30848,32400,3372\\) { $cl = \\(Get-CimInstance Win32_Process -Filter \"ProcessId=$procId\" -ErrorAction SilentlyContinue\\).CommandLine; Write-Output \"PID $procId :: $cl\" })",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Start-Sleep -Milliseconds 500; $busy = Get-NetTCPConnection -State Listen -LocalPort 3000 -ErrorAction SilentlyContinue; if \\($busy\\) { Write-Output \"3000 ainda ocupada por PID $\\($busy.OwningProcess\\)\" } else { Write-Output \"3000 livre\" })",
+      "PowerShell($busy = Get-NetTCPConnection -State Listen -LocalPort 3000 -ErrorAction SilentlyContinue; if \\($busy\\) { Write-Output \"3000 ainda ocupada \\(PID $\\($busy.OwningProcess\\)\\)\" } else { Write-Output \"3000 livre - servidor parado\" })",
+      "Bash(git -C D:\\\\PROJECTS\\\\MotionB status)"
+    ]
+  }
+}

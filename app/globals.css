@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Tema — galeria noir. Preto e cinza, acento off-white, alto whitespace.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-ink: #0a0a0a; /* fundo base */
+  --color-surface: #161616; /* superfícies / cards */
+  --color-surface-2: #1f1f1f; /* superfícies elevadas / hover */
+  --color-line: #2a2a2a; /* divisórias sutis */
+  --color-fg: #f5f5f5; /* texto principal */
+  --color-muted: #8a8a8a; /* texto secundário */
+  --color-accent: #e7e3da; /* acento off-white quente */
+
+  /* Base Neue — sistema com 3 larguras.
+     sans = Regular (corpo) · display = Expanded (títulos) · cond = Condensed (rótulos). */
+  --font-sans: var(--font-base), system-ui, sans-serif;
+  --font-display: var(--font-base-exp), system-ui, sans-serif;
+  --font-cond: var(--font-base-cond), system-ui, sans-serif;
+  --font-serif: var(--font-base), system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Seleção de texto discreta, coerente com o tema */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+/* Trilho rolagem minimalista */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* Utilitário: rótulo/kicker em Condensed, caixa alta e tracking largo */
+.eyebrow {
+  font-family: var(--font-cond);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+/* Grão de filme — overlay fixo sobre toda a página, sutil */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
